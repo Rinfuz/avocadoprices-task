@@ -4,7 +4,7 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.express as px
 
-# Dataset Avocado - Kelompok B TUBES PYTHON
+# Dataset Avocado Price - Kelompok B TUBES PYTHON
 url = "https://raw.githubusercontent.com/hananlu/basicPython/master/Dataset/avocadoPrice.csv"
 df = pd.read_csv(url)
 
