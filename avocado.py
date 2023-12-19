@@ -4,27 +4,22 @@ from dash.dependencies import Input, Output
 import pandas as pd
 import plotly.express as px
 
-# Load the Avocado dataset
+# Dataset Avocado - Kelompok B TUBES PYTHON
 url = "https://raw.githubusercontent.com/hananlu/basicPython/master/Dataset/avocadoPrice.csv"
 df = pd.read_csv(url)
 
-# Convert 'Date' column to datetime
 df['Date'] = pd.to_datetime(df['Date'])
-
-# Filter data for the years 2017 and 2018
+# Filter data tahun 2017 & 2018
 df_selected_years = df[df['Date'].dt.year.isin([2016, 2017, 2018])]
 
-# Create a Dash web application
 app = dash.Dash(__name__)
-
-# Define the layout of the app with enhanced styling
 app.layout = html.Div([
     html.Div([
         html.H1("Avocado Prices Data", className="display-4", style={'color': '#4CAF50'}),
         dcc.Dropdown(
             id='region-dropdown',
             options=[{'label': region, 'value': region} for region in df_selected_years['region'].unique()],
-            value='Albany',  # Default region
+            value='Albany',  # Daerah awal
             multi=False,
             className="custom-dropdown"
         ),
@@ -60,7 +55,6 @@ app.layout = html.Div([
     ], className="container mt-4", style={'background-color': '#f8f9fa', 'padding': '20px', 'border-radius': '10px'}),
 ], className="container-fluid", style={'font-family': 'Arial, sans-serif'})
 
-# Define callback to update line chart based on selected region and date range
 @app.callback(
     Output('line-chart', 'figure'),
     [Input('region-dropdown', 'value'),
@@ -71,7 +65,6 @@ def update_line_chart(selected_region, date_range):
     fig = px.line(filtered_df, x='Date', y='AveragePrice', title=f'Average Price Over Time ({selected_region})')
     return fig
 
-# Define callback to update bar chart based on selected region and date range
 @app.callback(
     Output('bar-chart', 'figure'),
     [Input('region-dropdown', 'value'),
@@ -81,13 +74,10 @@ def update_bar_chart(selected_region, date_range):
     filtered_df = df_selected_years[(df_selected_years['region'] == selected_region) & (df_selected_years['Date'] >= pd.to_datetime(date_range[0], unit='s')) & (df_selected_years['Date'] <= pd.to_datetime(date_range[1], unit='s'))]
     year_volume = filtered_df.groupby(filtered_df['Date'].dt.year)['Total Volume'].sum().reset_index()
     fig = px.bar(year_volume, x='Date', y='Total Volume', title=f'Total Volume Per Year ({selected_region})')
-    
-    # Update x-axis tick format to display years without decimal places
     fig.update_layout(xaxis=dict(tickmode='linear', tick0=2017, dtick=1))
-    
+
     return fig
 
-# Define callback to update scatter plot with animation based on selected region and date range
 @app.callback(
     Output('scatter-chart', 'figure'),
     [Input('region-dropdown', 'value'),
@@ -98,10 +88,10 @@ def update_scatter_chart(selected_region, date_range):
     fig = px.scatter(filtered_df, x='Date', y='AveragePrice', size='Total Volume', title=f'Average Price Over Time ({selected_region})')
     return fig
 
-# External CSS for additional styling
+# CSS dikit
 external_stylesheets = ['https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/slate/bootstrap.min.css']
 app.css.external_stylesheets = external_stylesheets
 
-# Run the app
+# jalankeun
 if __name__ == '__main__':
     app.run_server(debug=True)
