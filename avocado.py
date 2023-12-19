@@ -9,7 +9,7 @@ url = "https://raw.githubusercontent.com/hananlu/basicPython/master/Dataset/avoc
 df = pd.read_csv(url)
 
 df['Date'] = pd.to_datetime(df['Date'])
-# Filter data tahun 2017 & 2018
+# Filter data tahun 2016 - 2018
 df_selected_years = df[df['Date'].dt.year.isin([2016, 2017, 2018])]
 
 app = dash.Dash(__name__)
